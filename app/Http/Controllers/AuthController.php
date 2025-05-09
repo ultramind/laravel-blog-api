@@ -52,4 +52,51 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    // login user
+    public function loginUser(Request $request){
+        // validating the request fields
+        $validate = Validator::make($request->all(), [
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:6'
+        ]);
+
+        // error handling
+        if ($validate->fails()) {
+            return response()->json([
+                'message' => 'Validation Error',
+                'errors' => $validate->errors(), 403                
+            ]);
+        }
+
+        //get the request credentials
+        $credentials = ['email'=> $request->email, 'password' => $request->password];
+        // checking if the auth is valid
+        try{
+            if (!auth()->attempt($credentials)) {
+                return response()->json([
+                    'message' => 'Invalid Credentials',
+                    'errors' => 'Invalid Credentials'
+                ], 401);
+            }
+
+            // check if the user exists
+            $user = User::where('email', $request->email)->firstOrFail();
+            
+            // create a token for the user
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            // return the user and token
+            return response()->json([
+                'message' => 'User logged in successfully',
+                'user' => $user,
+                'access_token' => $token
+            ], 200);
+        }catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error logging in',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
