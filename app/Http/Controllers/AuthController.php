@@ -20,17 +20,19 @@ class AuthController extends Controller
         //     'password' => 'required|string|min:6|confirmed'
         // ]);
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|unique:users|max:255',
+            'password' => 'required|string|min:6|confirmed'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 403);
+        }
+
+
         try {
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|unique:users|max:255',
-                'password' => 'required|string|min:6|confirmed'
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json($validator->errors(), 403);
-            }
-
+            
             // create a new user
             $user = User::create([
                 'name' => $request->name,
