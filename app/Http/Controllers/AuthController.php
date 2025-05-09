@@ -32,7 +32,7 @@ class AuthController extends Controller
 
 
         try {
-            
+
             // create a new user
             $user = User::create([
                 'name' => $request->name,
@@ -54,7 +54,8 @@ class AuthController extends Controller
     }
 
     // login user
-    public function loginUser(Request $request){
+    public function loginUser(Request $request)
+    {
         // validating the request fields
         $validate = Validator::make($request->all(), [
             'email' => 'required|string|email|max:255',
@@ -65,14 +66,15 @@ class AuthController extends Controller
         if ($validate->fails()) {
             return response()->json([
                 'message' => 'Validation Error',
-                'errors' => $validate->errors(), 403                
+                'errors' => $validate->errors(),
+                403
             ]);
         }
 
         //get the request credentials
-        $credentials = ['email'=> $request->email, 'password' => $request->password];
+        $credentials = ['email' => $request->email, 'password' => $request->password];
         // checking if the auth is valid
-        try{
+        try {
             if (!auth()->attempt($credentials)) {
                 return response()->json([
                     'message' => 'Invalid Credentials',
@@ -82,7 +84,7 @@ class AuthController extends Controller
 
             // check if the user exists
             $user = User::where('email', $request->email)->firstOrFail();
-            
+
             // create a token for the user
             $token = $user->createToken('auth_token')->plainTextToken;
 
@@ -92,11 +94,21 @@ class AuthController extends Controller
                 'user' => $user,
                 'access_token' => $token
             ], 200);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Error logging in',
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+    // logout user
+    public function logoutUser(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        // return response
+        return response()->json([
+            'message' => 'User logged out successfully'
+        ], 200);
     }
 }

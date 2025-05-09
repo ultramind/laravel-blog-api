@@ -13,3 +13,8 @@ Route::post('/register', [AuthController::class, 'registerUser']);
 
 // login route/endpoint
 Route::post('/login', [AuthController::class, 'loginUser']);
+
+// protected route/endpoint
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logoutUser']);
+});
