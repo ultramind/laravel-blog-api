@@ -63,4 +63,25 @@ class PostController extends Controller
             ]);
         }
     }
+
+    //get single post
+    public function singlePost($post_id){
+        try {
+            $post = Post::find($post_id);
+            if (!$post) {
+                return response()->json([
+                    'message' => 'Post not found'
+                ], 404);
+            }
+            return response()->json([
+                'message' => 'Post fetched successfully',
+                'post' => $post
+            ], 200);
+        } catch (\Exception $error) {
+            return response()->json([
+                'message' => 'Error fetching post',
+                'error' => $error->getMessage()
+            ]);
+        }
+    }
 }

@@ -18,6 +18,7 @@ Route::post('/login', [AuthController::class, 'loginUser']);
 
 //public routes/endpoints
 Route::get('/all/posts', [PostController::class, 'getAllPosts']);
+Route::get('/single/post/{post_id}', [PostController::class, 'singlePost']);
 
 // protected route/endpoint
 Route::middleware('auth:sanctum')->group(function () {
