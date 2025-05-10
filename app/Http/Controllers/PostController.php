@@ -46,4 +46,21 @@ class PostController extends Controller
         }
         
     }
+
+    // fetching all posts
+    public function getAllPosts(){
+        try {
+            $posts = Post::all();
+            //return response
+            return response()->json([
+                'message'=> 'Posts fetched successfully',
+                'posts'=> $posts
+            ], 200);
+        } catch (\Exception $error) {
+            return response()->json([
+                'message'=> 'Error fetching posts',
+                'error'=>$error->getMessage()
+            ]);
+        }
+    }
 }

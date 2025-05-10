@@ -15,6 +15,10 @@ Route::post('/register', [AuthController::class, 'registerUser']);
 // login route/endpoint
 Route::post('/login', [AuthController::class, 'loginUser']);
 
+
+//public routes/endpoints
+Route::get('/all/posts', [PostController::class, 'getAllPosts']);
+
 // protected route/endpoint
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logoutUser']);
