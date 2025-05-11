@@ -68,7 +68,7 @@ class PostController extends Controller
     public function singlePost($post_id)
     {
         try {
-            $post = Post::find($post_id);
+            $post = Post::with('user')->find($post_id);
             if (!$post) {
                 return response()->json([
                     'message' => 'Post not found'
@@ -120,6 +120,21 @@ class PostController extends Controller
             return response()->json([
                 'updated_post' => $err->getMessage()
             ], 200);
+        }
+    }
+
+    public function deletePost(Request $request, $post_id)
+    {
+        try {
+            $post = Post::find($post_id);
+            $post->delete();
+            return response()->json([
+                'message' => 'Post deleted successfully',
+            ], 200);
+        } catch (\Throwable $err) {
+            return response()->json([
+                'error' => $err->getMessage()
+            ]);
         }
     }
 }
