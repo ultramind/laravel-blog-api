@@ -17,4 +17,15 @@ class Post extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    function comment()
+    {
+        return $this->belongsTo(Comment::class, 'user_id');
+    }
+
+
+    function like()
+    {
+        return $this->belongsTo(Like::class, 'user_id');
+    }
 }

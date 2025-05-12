@@ -68,7 +68,7 @@ class PostController extends Controller
     public function singlePost($post_id)
     {
         try {
-            $post = Post::with('user')->find($post_id);
+            $post = Post::with('user', 'comment', 'like')->find($post_id);
             if (!$post) {
                 return response()->json([
                     'message' => 'Post not found'
